@@ -5,7 +5,7 @@ import type { CustomContext } from '@/types/CustomContext';
 
 import { db } from '@/db/drizzle/connect';
 import { users } from '@/db/drizzle/schema';
-import { createReply } from '@/lib/create-reply';
+import { createBaseInfoReply } from '@/lib/create-reply';
 
 const router = new Router<CustomContext>((ctx) => ctx.session.route);
 
@@ -72,7 +72,7 @@ router.route('writeInitialData', async (ctx) => {
 
   ctx.session.route = 'waiting';
 
-  await ctx.reply(createReply(monthsPassed, weeksPassed), { parse_mode: 'Markdown' });
+  await ctx.reply(createBaseInfoReply(monthsPassed, weeksPassed), { parse_mode: 'Markdown' });
 });
 
 export { router };
