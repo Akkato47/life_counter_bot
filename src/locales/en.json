@@ -1,0 +1,11 @@
+{
+  "enter_birth_date": "Please enter your birth date in the format DD.MM.YYYY",
+  "invalid_date": "Invalid date. Please enter the date in the format DD.MM.YYYY.",
+  "journey_started": "🎉 *Your Life Journey* 🎉",
+  "months_lived": "📅 You have already lived: \\- *{{monthsPassed}}* months \\- *{{weeksPassed}}* weeks",
+  "time_left": "⏳ You have left: \\- *{{remainingMonths}}* months \\- *{{remainingWeeks}}* weeks",
+  "life_progress": "📊 *Life Progress:*",
+  "progress_bar": "`{{progressBar}}`",
+  "progress_message": "{{monthsPassed}}/{{totalMonths}} months {{weeksPassed}}/{{totalWeeks}} weeks",
+  "weekly_update": "⏰ _Every Monday adds +1 week!_"
+}

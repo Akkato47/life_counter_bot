@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1738921868047,
+      "tag": "0000_normal_iron_patriot",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1738921969406,
+      "tag": "0001_aberrant_tigra",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738934020566,
+      "tag": "0002_absent_lila_cheney",
+      "breakpoints": true
+    }
+  ]
+}
