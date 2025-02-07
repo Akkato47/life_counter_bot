@@ -24,15 +24,13 @@ services:
   bot-app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     depends_on:
       db:
         condition: service_healthy
     ports:
       - '8000:8000'
     environment:
-      APPNAME: ${APPNAME}
-      PORT: ${PORT}
       NODE_ENV: prod
       LOCALE: true
       BOT_API_KEY: ${BOT_API_KEY}
