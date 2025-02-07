@@ -42,7 +42,4 @@ ENV NODE_ENV="${NODE_ENV}" \
   DATABASE_NAME="${DATABASE_NAME}" \
   DATABASE_URL="postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}" 
 
-
-RUN npm run migrate:prod
-
 CMD [ "npm", "run", "start" ]
