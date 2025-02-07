@@ -2,8 +2,6 @@ import { z } from 'zod';
 import 'dotenv/config';
 
 const envSchema = z.object({
-  APPNAME: z.string(),
-  PORT: z.string(),
   NODE_ENV: z.string(),
   LOCALE: z.string(),
   BOT_API_KEY: z.string(),

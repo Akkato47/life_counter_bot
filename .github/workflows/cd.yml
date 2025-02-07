@@ -1,0 +1,93 @@
+name: cd
+
+on:
+  pull_request:
+    types:
+      - closed
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    name: Build and Push Docker Image
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push tg_bot_reminder Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:latest
+          build-args: |
+            NODE_ENV=${{ variables.NODE_ENV }}
+            LOCALE=${{ variables.LOCALE }}
+            BOT_API_KEY=${{ variables.BOT_API_KEY }}
+            DATABASE_HOST=${{ variables.DATABASE_HOST }}
+            DATABASE_PORT=${{ variables.DATABASE_PORT }}
+            DATABASE_USER=${{ variables.DATABASE_USER }}
+            DATABASE_PASSWORD=${{ variables.DATABASE_PASSWORD }}
+            DATABASE_NAME=${{ variables.DATABASE_NAME }}
+            DATABASE_URL=${{ variables.DATABASE_URL }}
+
+  deploy:
+    if: github.event.pull_request.merged == true
+    name: Deploy using Docker
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Install SSH keys
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.REMOTE_HOST }} > ~/.ssh/known_hosts
+
+      - name: Debug Variables
+        run: |
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}"
+          echo "REPOSITORY_NAME=${{ secrets.REPOSITORY_NAME }}"
+
+      - name: Deploy Docker Container
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          NODE_ENV: ${{ variables.NODE_ENV }}
+          LOCALE: ${{ variables.LOCALE }}
+          BOT_API_KEY: ${{ variables.BOT_API_KEY }}
+          DATABASE_HOST: ${{ variables.DATABASE_HOST }}
+          DATABASE_PORT: ${{ variables.DATABASE_PORT }}
+          DATABASE_USER: ${{ variables.DATABASE_USER }}
+          DATABASE_PASSWORD: ${{ variables.DATABASE_PASSWORD }}
+          DATABASE_NAME: ${{ variables.DATABASE_NAME }}
+          DATABASE_URL: ${{ variables.DATABASE_URL }}
+          REPOSITORY_NAME: ${{ secrets.REPOSITORY_NAME }}
+          PORT: ${{ secrets.PORT }}
+        run: |
+          ssh -T ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} << EOF
+
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+
+          docker container rm -f tg_reminder || true
+
+          docker system prune -a -f
+
+          docker pull $DOCKER_USERNAME/$REPOSITORY_NAME:latest
+
+          docker run -d --restart unless-stopped --name tg_reminder $DOCKER_USERNAME/$REPOSITORY_NAME:latest
+
+          EOF

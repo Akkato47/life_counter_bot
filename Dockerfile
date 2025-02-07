@@ -1,7 +1,5 @@
-ARG APPNAME="${APPNAME}" \
-  PORT="${PORT}" \
-  NODE_ENV="prod" \
-  LOCALE="true" \
+ARG NODE_ENV="${NODE_ENV}" \
+  LOCALE="${LOCALE}" \
   BOT_API_KEY="${BOT_API_KEY}" \
   DATABASE_HOST="${DATABASE_HOST}" \
   DATABASE_PORT="${DATABASE_PORT}" \
@@ -30,19 +28,12 @@ COPY --from=builder /var/www/dist ./dist
 COPY --from=builder /var/www/src/db/drizzle/migrations ./dist/db/drizzle/migrations
 COPY --from=builder /var/www/src/db/drizzle/migrations/meta ./dist/db/drizzle/migrations/meta
 COPY --from=builder /var/www/package-lock.json .
-COPY scripts/install-prod.sh ./scripts/install-prod.sh
 COPY package.json ./
 
-RUN apk add --no-cache jq
-# RUN sh ./scripts/install-prod.sh temporary
-RUN npm install aws-sdk@^2.1691.0 axios@^1.7.7 bcrypt@^5.1.1 cookie-parser@^1.4.6 cors@^2.8.5 dotenv@^16.3.1 drizzle-orm@0.31.0 express@^4.21.2 jsonwebtoken@9.0.1 morgan@^1.10.0 multer@^1.4.5-lts.1 nodemailer@^6.9.15 nodemailer-express-handlebars@^7.0.0 pg@^8.12.0 postgres@^3.3.5 redis@^4.7.0 sharp@^0.33.5 swagger-ui-express@^5.0.1 uuid@^10.0.0 winston@^3.10.0 zod@^3.22.2
-# RUN npm install $(cat package.json | jq -r '.dependencies | to_entries | .[] | "\(.key)@\(.value)"')
-RUN apk del jq
+RUN npm install @grammyjs/router@^2.0.0 @grammyjs/transformer-throttler@1.2.1 dotenv@^16.4.7 drizzle-orm@0.31.0 grammy@^1.34.1 node-cron@^3.0.3 pg@8.12.0 postgres@3.3.5 winston@^3.17.0 zod@^3.24.1 
 
-ENV APPNAME="${APPNAME}" \
-  PORT="${PORT}" \
-  NODE_ENV="prod" \
-  LOCALE="true" \
+ENV NODE_ENV="${NODE_ENV}" \
+  LOCALE="${LOCALE}" \
   BOT_API_KEY="${BOT_API_KEY}" \
   DATABASE_HOST="${DATABASE_HOST}" \
   DATABASE_PORT="${DATABASE_PORT}" \
@@ -51,4 +42,4 @@ ENV APPNAME="${APPNAME}" \
   DATABASE_NAME="${DATABASE_NAME}" \
   DATABASE_URL="postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}" 
 
-EXPOSE ${PORT}
+CMD [ "npm", "run", "start" ]

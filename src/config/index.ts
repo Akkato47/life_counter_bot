@@ -5,10 +5,8 @@ const isLocale = env.LOCALE === 'true';
 
 export default {
   app: {
-    name: env.APPNAME,
     isProduction,
     isLocale,
-    port: env.PORT || 50050,
     botApiKey: env.BOT_API_KEY
   },
   database: {
