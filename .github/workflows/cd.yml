@@ -35,15 +35,15 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPOSITORY_NAME }}:latest
           build-args: |
-            NODE_ENV=${{ variables.NODE_ENV }}
-            LOCALE=${{ variables.LOCALE }}
-            BOT_API_KEY=${{ variables.BOT_API_KEY }}
-            DATABASE_HOST=${{ variables.DATABASE_HOST }}
-            DATABASE_PORT=${{ variables.DATABASE_PORT }}
-            DATABASE_USER=${{ variables.DATABASE_USER }}
-            DATABASE_PASSWORD=${{ variables.DATABASE_PASSWORD }}
-            DATABASE_NAME=${{ variables.DATABASE_NAME }}
-            DATABASE_URL=${{ variables.DATABASE_URL }}
+            NODE_ENV=${{ vars.NODE_ENV }}
+            LOCALE=${{ vars.LOCALE }}
+            BOT_API_KEY=${{ vars.BOT_API_KEY }}
+            DATABASE_HOST=${{ vars.DATABASE_HOST }}
+            DATABASE_PORT=${{ vars.DATABASE_PORT }}
+            DATABASE_USER=${{ vars.DATABASE_USER }}
+            DATABASE_PASSWORD=${{ vars.DATABASE_PASSWORD }}
+            DATABASE_NAME=${{ vars.DATABASE_NAME }}
+            DATABASE_URL=${{ vars.DATABASE_URL }}
 
   deploy:
     if: github.event.pull_request.merged == true
@@ -57,7 +57,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.REMOTE_HOST }} > ~/.ssh/known_hosts
 
-      - name: Debug Variables
+      - name: Debug vars
         run: |
           echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}"
           echo "REPOSITORY_NAME=${{ secrets.REPOSITORY_NAME }}"
@@ -66,15 +66,15 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          NODE_ENV: ${{ variables.NODE_ENV }}
-          LOCALE: ${{ variables.LOCALE }}
-          BOT_API_KEY: ${{ variables.BOT_API_KEY }}
-          DATABASE_HOST: ${{ variables.DATABASE_HOST }}
-          DATABASE_PORT: ${{ variables.DATABASE_PORT }}
-          DATABASE_USER: ${{ variables.DATABASE_USER }}
-          DATABASE_PASSWORD: ${{ variables.DATABASE_PASSWORD }}
-          DATABASE_NAME: ${{ variables.DATABASE_NAME }}
-          DATABASE_URL: ${{ variables.DATABASE_URL }}
+          NODE_ENV: ${{ vars.NODE_ENV }}
+          LOCALE: ${{ vars.LOCALE }}
+          BOT_API_KEY: ${{ vars.BOT_API_KEY }}
+          DATABASE_HOST: ${{ vars.DATABASE_HOST }}
+          DATABASE_PORT: ${{ vars.DATABASE_PORT }}
+          DATABASE_USER: ${{ vars.DATABASE_USER }}
+          DATABASE_PASSWORD: ${{ vars.DATABASE_PASSWORD }}
+          DATABASE_NAME: ${{ vars.DATABASE_NAME }}
+          DATABASE_URL: ${{ vars.DATABASE_URL }}
           REPOSITORY_NAME: ${{ secrets.REPOSITORY_NAME }}
           PORT: ${{ secrets.PORT }}
         run: |
