@@ -89,5 +89,6 @@ jobs:
 
           docker run -d --restart unless-stopped --name tg_reminder -e NODE_ENV=$NODE_ENV -e LOCALE=$LOCALE -e BOT_API_KEY=$BOT_API_KEY -e DATABASE_HOST=$DATABASE_HOST -e DATABASE_PORT=$DATABASE_PORT -e DATABASE_USER=$DATABASE_USER -e DATABASE_PASSWORD=$DATABASE_PASSWORD -e DATABASE_NAME=$DATABASE_NAME -e DATABASE_URL=$DATABASE_URL $DOCKER_USERNAME/$REPOSITORY_NAME:latest
 
+          docker exec -it tg_reminder sh -c "npm run migrate:prod && exit"
 
           EOF
