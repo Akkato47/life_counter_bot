@@ -15,6 +15,10 @@ export const weeklyReminder = async (now: Date, bot: Bot) => {
 
     const usersToRemind = await db.select().from(users).where(eq(users.utcOffset, offset));
 
+    if (usersToRemind.length === 0) {
+      return;
+    }
+
     for (const user of usersToRemind) {
       try {
         const newWeeksLived = +user.weeksLived + 1;
