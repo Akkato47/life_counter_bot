@@ -22,11 +22,11 @@ composer.command('start', async (ctx) => {
 });
 
 composer.command('info', async (ctx) => {
-  if (ctx.session.route !== 'waiting') {
+  const user = await db.select().from(users).where(eq(users.chatId, ctx.session.chatId.toString()));
+
+  if (user.length === 0) {
     await ctx.reply('Сначала вы должны пройти опрос используя команду /start');
   }
-
-  const user = await db.select().from(users).where(eq(users.chatId, ctx.session.chatId.toString()));
 
   await ctx.reply(createBaseInfoReply(+user[0].monthsLived, +user[0].weeksLived));
 });
